@@ -2,12 +2,13 @@ from PIL import Image, ImageOps, ImageGrab
 import cv2
 import os
 import time
+import pyautogui as pag
 
 # 70 levels of grey
 grey_scale_HD = r'$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`. '
 
 # 10 levels of grey
-grey_scale_SD = r"@%#*+=-:. "
+grey_scale_SD = r'@%#*+=-:. '
 
 # Code to convert image to ASCII
 def convert_to_ascii(image, highres=False):
@@ -15,12 +16,13 @@ def convert_to_ascii(image, highres=False):
         # Resize the image
         width, height = image.size
         aspect_ratio = height / width
-        new_width = 378
+        #new_width = 378    CHANGE BACK
+        new_width = 132
         new_height = aspect_ratio * new_width * 0.55
         image = image.resize((new_width, int(new_height)))
 
         # Convert image to greyscale
-        image = image.convert("L")
+        image = image.convert('L')
         image = ImageOps.invert(image)
 
         # Convert to ASCII
@@ -31,15 +33,15 @@ def convert_to_ascii(image, highres=False):
         else:
             new_pixels = [grey_scale_SD[int((len(grey_scale_SD) - 1) * pixel / 255)] for pixel in pixels]
 
-        new_pixels = "".join(new_pixels)
+        new_pixels = ''.join(new_pixels)
 
         # Split string of chars into multiple strings of length equal to new width and create a list
         new_pixels_count = len(new_pixels)
         ascii_image = [new_pixels[i:i + new_width] for i in range(0, new_pixels_count, new_width)]
-        ascii_image = "\n".join(ascii_image)
+        ascii_image = '\n'.join(ascii_image)
         return ascii_image
     except Exception as e:
-        print(f"Error converting image to ASCII: {e}")
+        print(f'Error converting image to ASCII: {e}')
         return None
 
 class VideoToASCII:
@@ -49,27 +51,27 @@ class VideoToASCII:
 
     def get_user_choice(self):
         while True:
-            print("Choose an option:")
-            print("1. Input a video file")
-            print("2. Use recorded video")
-            print("3. Convert an image to ASCII")
+            print('Choose an option:')
+            print('1. Input a video file')
+            print('2. Use recorded video')
+            print('3. Convert an image to ASCII')
 
             try:
-                self.choice = int(input("Choose an option: "))
+                self.choice = int(input('Choose an option: '))
                 if self.choice not in [1, 2, 3]:
-                    print("Invalid choice. Please choose 1, 2, or 3.")
+                    print('Invalid choice. Please choose 1, 2, or 3.')
                 else:
                     break
             except ValueError:
-                print("Invalid input. Please enter a number.")
+                print('Invalid input. Please enter a number.')
 
         while True:
-            print("Choose a resolution:")
-            print("1. HD (High resolution)")
-            print("2. SD (Low resolution)")
+            print('Choose a resolution:')
+            print('1. HD (High resolution)')
+            print('2. SD (Low resolution)')
             
             try:
-                resolution_choice = int(input("Choose a resolution: "))
+                resolution_choice = int(input('Choose a resolution: '))
                 if resolution_choice == 1:
                     self.resolution = True
                     break
@@ -77,16 +79,16 @@ class VideoToASCII:
                     self.resolution = False
                     break
                 else:
-                    print("Invalid choice. Please choose 1 or 2.")
+                    print('Invalid choice. Please choose 1 or 2.')
             except ValueError:
-                print("Invalid input. Please enter a number.")
+                print('Invalid input. Please enter a number.')
 
     # Using convert_to_ascii() method, convert frames of a video to ASCII
     def video_to_ascii(self):
         if self.choice == 1:
-            video_path = input("Enter the path to the video file: ")
+            video_path = input('Enter the path to the video file: ')
             if not os.path.exists(video_path):
-                print("Video file not found.")
+                print('Video file not found.')
                 return
 
             # Open the video file
@@ -123,7 +125,7 @@ class VideoToASCII:
             capture.release()
 
         elif self.choice == 2:
-            fps = int(input("Enter the frames per second: "))
+            fps = int(input('Enter the frames per second: '))
 
             # Initialize previous time
             prev = time.time()
@@ -131,7 +133,7 @@ class VideoToASCII:
             while True:
                 try:
                     time_elapsed = time.time() - prev
-                    img = ImageGrab.grab()
+                    img = pag.screenshot('fb.png')
 
                     if time_elapsed > 1.0/fps:
                         prev = time.time()
@@ -146,16 +148,16 @@ class VideoToASCII:
                         print(ascii_frame)
 
                 except KeyboardInterrupt:
-                    print("Recording stopped by user.")
+                    print('Recording stopped by user.')
                     break
                 except Exception as e:
-                    print(f"Error recording screen: {e}")
+                    print(f'Error recording screen: {e}')
                     break
 
         elif self.choice == 3:
-            image_path = input("Enter the path to the image file: ")
+            image_path = input('Enter the path to the image file: ')
             if not os.path.exists(image_path):
-                print("Image file not found.")
+                print('Image file not found.')
                 return
 
             image = Image.open(image_path)
@@ -168,7 +170,7 @@ def main():
         video_to_ascii.get_user_choice()
         video_to_ascii.video_to_ascii()
     except Exception as e:
-        print(f"Error: {e}")
+        print(f'Error: {e}')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
