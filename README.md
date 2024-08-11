@@ -11,3 +11,7 @@ https://youtu.be/8qc5rAlwkto
 
 HD output
 https://youtu.be/aZVo6w3DOSQ
+
+
+# KNOWN ISSUES
+record option is wonky and doesn't work on wayland
