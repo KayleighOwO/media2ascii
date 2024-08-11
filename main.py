@@ -16,8 +16,7 @@ def convert_to_ascii(image, highres=False):
         # Resize the image
         width, height = image.size
         aspect_ratio = height / width
-        #new_width = 378    CHANGE BACK
-        new_width = 132
+        new_width = 378    #TODO: Automatically detect width
         new_height = aspect_ratio * new_width * 0.55
         image = image.resize((new_width, int(new_height)))
 
